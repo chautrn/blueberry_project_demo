@@ -1,0 +1,36 @@
+<!doctype html>
+<style>
+	table {
+	  font-family: arial, sans-serif;
+	  border-collapse: collapse;
+	}
+
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	h2 {
+	  font-family: arial, sans-serif;
+	}
+</style>
+
+<img src="{{ image }}" >
+<h2>Count</h2>
+<table>
+  <tr>
+    <th>Total</th>
+    <th>Blue</th>
+    <th>Green</th>
+  </tr>
+  <tr>
+    <td>{{ total }}</td>
+	<td>{{ blue }}</td>
+	<td>{{ green }}</td>
+  </tr>
+</table>
+<h2>All Boxes</h2>
+{{ prediction_table | safe}}
