@@ -1,0 +1,5 @@
+./pid
+./__pycache__
+./log.txt
+./pid
+./runserver
