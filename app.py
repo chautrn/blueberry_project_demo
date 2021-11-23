@@ -18,15 +18,7 @@ def bytes_to_numpy(image_bytes):
     return image
 
 
-@app.route('/', methods=['GET'])
-def upload_form():
-    return render_template('upload.html')
-
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    if request.method == 'POST':
-        file = request.files['file']
+def predict_image_file(file):
         image_bytes = file.read()
         image = bytes_to_numpy(image_bytes)
 
@@ -40,14 +32,44 @@ def predict():
         raw_bytes.seek(0)
         pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
         mime = 'image/jpeg'
+
         uri = "data:%s;base64,%s"%(mime, pred_img_base64)
 
-        total = count['total']
-        green = count['green']
-        blue = count['blue']
-        prediction_table = prediction['table']
+        return {'image': uri,
+                'count': count,
+                'prediction_table': prediction['table']}
 
-        return render_template('result.html', image=uri, total=total, green=green, blue=blue, prediction_table=prediction_table)
+
+@app.route('/', methods=['GET'])
+def upload_form():
+    return render_template('upload.html')
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        file = request.files['file']
+        result = predict_image_file(file)
+
+        return render_template('result.html', 
+                image=result['image'], 
+                total=result['count']['total'], 
+                green=result['count']['green'], 
+                blue=result['count']['blue'], 
+                prediction_table=result['prediction_table'])
+
+
+@app.route('/predict_multiple', methods=['POST'])
+def predict_multiple():
+    if request.method == 'POST':
+        files = request.files.getlist('file[]')
+        response = {}
+        for file in files:
+            filename = file.filename
+            response[filename] = predict_image_file(file)
+    return jsonify(response)
+
+
 
 
 if __name__ == '__main__':

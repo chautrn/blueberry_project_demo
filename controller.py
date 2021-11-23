@@ -35,3 +35,6 @@ def yolo_predict(image):
     all_boxes = get_results_as_dataframe(results)
     html = all_boxes.to_html()
     return {'image': combined_image, 'count': count, 'table': html}
+
+if __name__ == '__main__':
+    print(model)
