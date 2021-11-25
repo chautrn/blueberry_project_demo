@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, send_file, render_template
+from flask_cors import CORS, cross_origin
 import numpy as np
 from PIL import Image
 import base64
@@ -8,6 +9,8 @@ from controller import yolo_predict
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def bytes_to_numpy(image_bytes):
@@ -60,13 +63,17 @@ def predict():
 
 
 @app.route('/predict_multiple', methods=['POST'])
+@cross_origin()
 def predict_multiple():
     if request.method == 'POST':
         files = request.files.getlist('file[]')
-        response = {}
+        response = {'predictions': []}
         for file in files:
-            filename = file.filename
-            response[filename] = predict_image_file(file)
+            prediction = predict_image_file(file)
+            prediction['filename'] = file.filename
+            response['predictions'].append(prediction)
+        with open('print.txt', 'w') as f:
+            f.write(str(response))
     return jsonify(response)
 
 

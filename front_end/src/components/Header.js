@@ -1,5 +1,6 @@
 import { AppBar, Toolbar } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 const useStyles = makeStyles({
@@ -22,20 +23,37 @@ const useStyles = makeStyles({
 		fontWeight: '700', 
 		lineHeight: '45px',
 		letterSpacing: '2px',
+	},
+	Link: {
+		textDecoration: 'none',
+		'&:focus, &:hover, &:visited, &:link, &:active': {
+			textDecoration: 'none',
+		},
+		color: 'inherit',
 	}
 });
 
 const Header = () => {
-	const styles = useStyles();
+	const classes = useStyles();
+
 	const displayDesktop = () => {
-		return 	<Toolbar>
-					<img className={styles.Logo} src={logo}></img>	
-					<header className={styles.Header}> Rowan Blueberry Project </header>
-				</Toolbar>;
+		return (
+				<Toolbar>
+					<img className={classes.Logo} src={logo}></img>	
+					<Link to='/' className={classes.Link}>
+						<header className={classes.Header}> Rowan Blueberry Project Demo </header>
+					</Link>
+				</Toolbar>
+		);
 	};
 	return (
 		<header>
-			  <AppBar className={styles.AppBar}>{displayDesktop()}</AppBar>
+			<AppBar 
+				className={classes.AppBar}
+				position='relative'
+			>
+				{displayDesktop()}
+			</AppBar>
 		</header>
 	);
 }
