@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import ResultCard from '../components/ResultCard';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "./Results.css";
 import { Carousel } from 'react-responsive-carousel';
 
 const useStyles = makeStyles({
@@ -15,15 +14,19 @@ const useStyles = makeStyles({
 	carousel: {
 		width: '60%',
 		marginTop: '100px',
+		'& .carousel-slider': {
+			boxShadow: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
+		},
+
 	},
 	wrapper: {
 		display: 'flex',
 		justifyContent: 'center',
 		height: 'calc(100% - 96px)',
 	}
-})
+});
 
-function Results(props) {
+const Results = () => {
 	const classes = useStyles();
 	const { state } = useLocation();
 	if (state.res) {

@@ -3,19 +3,24 @@ import { Navigate } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Button } from '@mui/material';
 import Dropzone from 'react-dropzone-uploader'
-import axios from 'axios';
-import 'react-dropzone-uploader/dist/styles.css';
-import './Home.css';
 import Loading from '../components/Loading';
+import 'react-dropzone-uploader/dist/styles.css'
 
+const useStyles = makeStyles({
+	wrapper: {
+		height: 'calc(100% - 96px)',
+		'& .dzu-dropzone': {
+			height: '100%',
+		}
+	},
+});
 
-function Home() {
+const Home = () => {
 	const [file, setFile] = useState('');
 	const [prediction, setPrediction] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	// specify upload params and url for your files
-	const getUploadParams = ({ meta }) => { return { url: 'https://httpbin.org/post' } }
+	const classes = useStyles();
 
 	// called every time a file's `status` changes
 	const handleChangeStatus = ({ meta, file }, status) => { console.log('') }
@@ -63,16 +68,16 @@ function Home() {
 	}
 	else if (loading) {
 		return (
-			<div className='home-wrapper'>
+			<div className={classes.wrapper}>
 				<Loading />
 			</div>
 		)
 	}
 
 	return (
-		<div className='home-wrapper'>
+		<div className={classes.wrapper}>
 			<Dropzone 
-				getUploadParams={getUploadParams}
+				className={classes.dropzone}
 				onChangeStatus={handleChangeStatus}
 				onSubmit={handleSubmit}
 				initialFiles={[]}
