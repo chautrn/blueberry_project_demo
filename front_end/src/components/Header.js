@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 			textDecoration: 'none',
 		},
 		color: 'inherit',
+		marginRight: '50px',
 	}
 });
 
@@ -42,6 +43,12 @@ const Header = () => {
 					<img className={classes.Logo} src={logo}></img>	
 					<Link to='/' className={classes.Link}>
 						<header className={classes.Header}> Rowan Blueberry Project Demo </header>
+					</Link>
+					<Link to='/about' className={classes.Link}>
+						<header className={classes.Header}> About </header>
+					</Link>
+					<Link to='/contact' className={classes.Link}>
+						<header className={classes.Header}> Contact </header>
 					</Link>
 				</Toolbar>
 		);
