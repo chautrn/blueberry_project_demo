@@ -6,6 +6,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Modal, Button } from '@mui/material';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { saveAs } from 'file-saver';
 
 const useStyles = makeStyles({
 	results: {
@@ -74,6 +75,17 @@ const Results = () => {
 		link.click();
 	}
 
+	const handleDownloadImages = () => {
+		const zip = require('jszip')();
+		for (let prediction of state.res) {
+			let {image, filename, ...data} = prediction;
+			zip.file(filename, image.split(',')[1], {base64: true});
+		}
+		zip.generateAsync({type: 'blob'}).then(content => {
+			saveAs(content, 'images.zip');
+		});
+	}
+
 	if (state.res) {
 		return (
 			<>
@@ -102,7 +114,7 @@ const Results = () => {
 						>
 							Download Annotations
 						</Button>
-						<Button variant='contained'>Download Images</Button>
+						<Button variant='contained' onClick={handleDownloadImages}>Download Images</Button>
 					</div>
 				</div>
 				<Modal
