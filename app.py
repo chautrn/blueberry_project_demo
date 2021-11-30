@@ -26,7 +26,6 @@ def predict_image_file(file):
         image = bytes_to_numpy(image_bytes)
 
         prediction = yolo_predict(image)
-        count = prediction['count']
 
         prediction_image = prediction['image']
         prediction_image = Image.fromarray(prediction_image.astype('uint8'))
@@ -39,8 +38,8 @@ def predict_image_file(file):
         uri = "data:%s;base64,%s"%(mime, pred_img_base64)
 
         return {'image': uri,
-                'count': count,
-                'prediction_table': prediction['table']}
+                'count': prediction['count'],
+                'boxes': prediction['boxes']}
 
 
 @app.route('/', methods=['GET'])
@@ -59,7 +58,7 @@ def predict():
                 total=result['count']['total'], 
                 green=result['count']['green'], 
                 blue=result['count']['blue'], 
-                prediction_table=result['prediction_table'])
+                boxes=result['boxes'])
 
 
 @app.route('/predict_multiple', methods=['POST'])
@@ -75,8 +74,6 @@ def predict_multiple():
         with open('print.txt', 'w') as f:
             f.write(str(response))
     return jsonify(response)
-
-
 
 
 if __name__ == '__main__':

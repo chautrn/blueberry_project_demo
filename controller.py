@@ -33,8 +33,8 @@ def yolo_predict(image):
     combined_image = combine_tiles(results)
     count = count_results(results)
     all_boxes = get_results_as_dataframe(results)
-    html = all_boxes.to_html()
-    return {'image': combined_image, 'count': count, 'table': html}
+    box_data = all_boxes.to_json(orient='records')
+    return {'image': combined_image, 'count': count, 'boxes': box_data}
 
 if __name__ == '__main__':
     print(model)
