@@ -6,13 +6,10 @@ from combiner import combine_tiles
 import pandas as pd
 
 # Model
-model = torch.hub.load('ultralytics/yolov5', 'custom', path='/data/drone/tranch29/yolov5/runs/train/exp5/weights/best.pt')
+model = torch.hub.load('chautrn/yolov5', 'custom', path='/data/drone/tranch29/yolov5/runs/train/exp5/weights/best.pt')
 
 # Model settings
 model.conf = 0.6
-model.hide_labels = True 
-model.hide_conf = True
-
 
 def imwriteRGB(path, image):
     cv2.imwrite(path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
