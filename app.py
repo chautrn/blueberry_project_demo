@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, send_file, render_template
+from flask_cors import CORS, cross_origin
 import numpy as np
 from PIL import Image
 import base64
@@ -8,6 +9,8 @@ from controller import yolo_predict
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def bytes_to_numpy(image_bytes):
@@ -16,6 +19,27 @@ def bytes_to_numpy(image_bytes):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # cv2.imwrite('test_input.png', image)
     return image
+
+
+def predict_image_file(file):
+        image_bytes = file.read()
+        image = bytes_to_numpy(image_bytes)
+
+        prediction = yolo_predict(image)
+
+        prediction_image = prediction['image']
+        prediction_image = Image.fromarray(prediction_image.astype('uint8'))
+        raw_bytes = io.BytesIO()
+        prediction_image.save(raw_bytes, 'JPEG')
+        raw_bytes.seek(0)
+        pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
+        mime = 'image/jpeg'
+
+        uri = "data:%s;base64,%s"%(mime, pred_img_base64)
+
+        return {'image': uri,
+                'count': prediction['count'],
+                'boxes': prediction['boxes']}
 
 
 @app.route('/', methods=['GET'])
@@ -27,27 +51,29 @@ def upload_form():
 def predict():
     if request.method == 'POST':
         file = request.files['file']
-        image_bytes = file.read()
-        image = bytes_to_numpy(image_bytes)
+        result = predict_image_file(file)
 
-        prediction = yolo_predict(image)
-        count = prediction['count']
+        return render_template('result.html', \
+                image=result['image'], \
+                total=result['count']['total'], \
+                green=result['count']['green'],
+                blue=result['count']['blue'],
+                boxes=result['boxes'])
 
-        prediction_image = prediction['image']
-        prediction_image = Image.fromarray(prediction_image.astype('uint8'))
-        raw_bytes = io.BytesIO()
-        prediction_image.save(raw_bytes, 'JPEG')
-        raw_bytes.seek(0)
-        pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
-        mime = 'image/jpeg'
-        uri = "data:%s;base64,%s"%(mime, pred_img_base64)
 
-        total = count['total']
-        green = count['green']
-        blue = count['blue']
-        prediction_table = prediction['table']
-
-        return render_template('result.html', image=uri, total=total, green=green, blue=blue, prediction_table=prediction_table)
+@app.route('/predict_multiple', methods=['POST'])
+@cross_origin()
+def predict_multiple():
+    if request.method == 'POST':
+        files = request.files.getlist('file[]')
+        response = {'predictions': []}
+        for file in files:
+            prediction = predict_image_file(file)
+            prediction['filename'] = file.filename
+            response['predictions'].append(prediction)
+        with open('print.txt', 'w') as f:
+            f.write(str(response))
+    return jsonify(response)
 
 
 if __name__ == '__main__':
