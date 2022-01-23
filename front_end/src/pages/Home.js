@@ -145,7 +145,6 @@ const Home = () => {
 			>
 				<WebcamCapture handleSubmit={handleCameraSubmit} />
 			</Modal>
->>>>>>> ae21115cc77f0bcd3ee8348d43a446e18b2b31b3
 		</div>
 	);
 }
