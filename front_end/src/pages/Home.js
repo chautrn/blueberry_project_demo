@@ -81,7 +81,7 @@ const Home = () => {
 				onChangeStatus={handleChangeStatus}
 				onSubmit={handleSubmit}
 				initialFiles={[]}
-				inputContent='Drag and drop input files'
+				inputContent='Drag and drop input files of blueberry images (or click to upload)'
 				accept='image/*'
 			/>
 		</div>

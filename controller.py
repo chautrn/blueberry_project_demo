@@ -23,6 +23,7 @@ def get_predictions(image):
     results = {}
     for tilename in tiles.keys():
         tile = tiles[tilename]
+        print(tile.shape)
         result = model(tile)
         results[tilename] = result
     return results
@@ -37,4 +38,4 @@ def yolo_predict(image):
     return {'image': combined_image, 'count': count, 'boxes': box_data}
 
 if __name__ == '__main__':
-    print(model)
+    traced_model = torch.jit.trace(model, torch.randn(1, 3, 640, 640))
