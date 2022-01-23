@@ -53,11 +53,11 @@ def predict():
         file = request.files['file']
         result = predict_image_file(file)
 
-        return render_template('result.html', 
-                image=result['image'], 
-                total=result['count']['total'], 
-                green=result['count']['green'], 
-                blue=result['count']['blue'], 
+        return render_template('result.html', \
+                image=result['image'], \
+                total=result['count']['total'], \
+                green=result['count']['green'],
+                blue=result['count']['blue'],
                 boxes=result['boxes'])
 
 
