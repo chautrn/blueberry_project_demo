@@ -56,7 +56,7 @@ const Home = () => {
 		}
 		allFiles.forEach(f => f.remove());
 		setLoading(true);
-		fetch('http://10.240.37.18:5000/predict_multiple', {
+		fetch('http://localhost:5000/predict_multiple', {
 			method: 'POST',
 			body: data,
 		})
