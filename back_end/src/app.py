@@ -71,8 +71,6 @@ def predict_multiple():
             prediction = predict_image_file(file)
             prediction['filename'] = file.filename
             response['predictions'].append(prediction)
-        with open('print.txt', 'w') as f:
-            f.write(str(response))
     return jsonify(response)
 
 
