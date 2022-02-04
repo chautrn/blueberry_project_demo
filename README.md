@@ -12,7 +12,7 @@ make sure you have python 3.8.5 64 bit \
 $ pip install -r ./back_end/requirements.txt \
 $ python ./back_end/src/app.py 
 
-**front end:**\
+**front end (open new terminal instance):**\
 --- from project root --- \
 $ cd ./front_end \
 $ npm install \
