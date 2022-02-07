@@ -39,5 +39,6 @@ def yolo_predict(image):
     box_data = all_boxes.to_dict(orient='index')
     return {'image': combined_image, 'count': count, 'boxes': box_data}
 
+
 if __name__ == '__main__':
     traced_model = torch.jit.trace(model, torch.randn(1, 3, 640, 640))

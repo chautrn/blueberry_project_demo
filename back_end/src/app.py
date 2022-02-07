@@ -7,7 +7,6 @@ import cv2
 import io
 from controller import yolo_predict 
 
-
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -22,24 +21,24 @@ def bytes_to_numpy(image_bytes):
 
 
 def predict_image_file(file):
-        image_bytes = file.read()
-        image = bytes_to_numpy(image_bytes)
+    image_bytes = file.read()
+    image = bytes_to_numpy(image_bytes)
 
-        prediction = yolo_predict(image)
+    prediction = yolo_predict(image)
 
-        prediction_image = prediction['image']
-        prediction_image = Image.fromarray(prediction_image.astype('uint8'))
-        raw_bytes = io.BytesIO()
-        prediction_image.save(raw_bytes, 'JPEG')
-        raw_bytes.seek(0)
-        pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
-        mime = 'image/jpeg'
+    prediction_image = prediction['image']
+    prediction_image = Image.fromarray(prediction_image.astype('uint8'))
+    raw_bytes = io.BytesIO()
+    prediction_image.save(raw_bytes, 'JPEG')
+    raw_bytes.seek(0)
+    pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
+    mime = 'image/jpeg'
 
-        uri = "data:%s;base64,%s"%(mime, pred_img_base64)
+    uri = "data:%s;base64,%s"%(mime, pred_img_base64)
 
-        return {'image': uri,
-                'count': prediction['count'],
-                'boxes': prediction['boxes']}
+    return {'image': uri,
+            'count': prediction['count'],
+            'boxes': prediction['boxes']}
 
 
 @app.route('/', methods=['GET'])

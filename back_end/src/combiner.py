@@ -2,12 +2,14 @@ import os
 import cv2
 import re
 
+
 def tile_coords(tile_name):
     tokens = re.split('_|\.', tile_name)
-    return (int(tokens[4]), int(tokens[2])) # tile x and y
+    return (int(tokens[4]), int(tokens[2]))  # tile x and y
+
 
 def tile_dim(tile_dict):
-    keys = sorted(list(tile_dict.keys()), key=lambda key: sum(tile_coords(key)))
+    keys = sorted(list(tile_dict.keys()), key=lambda i: sum(tile_coords(i)))
     last_tile = keys[-1]
     return tile_coords(last_tile)
 

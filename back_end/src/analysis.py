@@ -1,11 +1,12 @@
 import pandas as pd
 
+
 def count_results(results):
     counts = {
-            'total': 0,
-            'blue': 0,
-            'green': 0,
-            }
+                'total': 0,
+                'blue': 0,
+                'green': 0,
+             }
     for tilename in results.keys():
         result = results[tilename]
         total = result.pandas().xyxy[0]
@@ -18,6 +19,7 @@ def count_results(results):
 
     return counts
 
+
 def get_results_as_dataframe(results):
     frames = []
     for tilename in results.keys():
@@ -26,4 +28,3 @@ def get_results_as_dataframe(results):
         frames.append(frame)
 
     return pd.concat(frames, ignore_index=True)
-
