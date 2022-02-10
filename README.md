@@ -4,7 +4,7 @@ A Flask application demoing YOLOv5 weights from Rowan's blueberry research proje
 **Execution:**\
 \
 $ git clone https://github.com/chautrn/blueberry_project_demo \
-$ git branch localserver
+$ git checkout localserver
 
 **back end:**\
 make sure you have python 3.8.5 64 bit \
