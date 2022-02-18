@@ -1,5 +1,10 @@
 import blueberry from '../assets/blueberry_image_cropped.png'
 import blueberry_prediction from '../assets/blueberry_image_cropped_prediction.png'
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const About = () => {
 	return (
@@ -10,8 +15,11 @@ const About = () => {
 		&nbsp;----- RU-Blue ---->&nbsp;
 		<img  src={blueberry_prediction} height="249" width="360"></img>
 
-		</div>
+		<br/> <br/>
 
+		<iframe width="850" height="500" src="https://www.youtube.com/embed/D5nmx8phFmk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+		</div>
 	);
 }
 export default About;
