@@ -7,6 +7,12 @@ import Loading from '../components/Loading';
 import Demo from '../components/Demo';
 import 'react-dropzone-uploader/dist/styles.css'
 import WebcamCapture from '../components/Webcam';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 
 const useStyles = makeStyles({
@@ -23,6 +29,7 @@ const useStyles = makeStyles({
 		}
 	},
 	buttonWrapper: {
+		
 	},
 	buttonSpaced: {
 		marginRight: '30px !important'
@@ -32,6 +39,12 @@ const useStyles = makeStyles({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+
+	dropDown: {
+		display: 'inline-block',
+		marginLeft: '30px'
+	}
+
 });
 
 const Home = () => {
@@ -137,6 +150,29 @@ const Home = () => {
 					variant='contained'
 					onClick={() => {loadSampleImages()}}
 				>Load Sample Images</Button>
+
+
+
+		<Box className={classes.dropDown} sx={{ width: 300 }}>
+     		 <FormControl fullWidth >
+        		<InputLabel id="demo-simple-select-label">Models</InputLabel>
+        		<Select
+          		labelId="demo-simple-select-label"
+          		id="demo-simple-select"
+          		//value={age}
+          		label="Models"
+          		//onChange={handleChange}
+        		>
+          		<MenuItem value={10}>PlaceHolder1</MenuItem>
+          		<MenuItem value={20}>PlaceHolder2</MenuItem>
+          		<MenuItem value={30}>PlaceHolder3</MenuItem>
+        		</Select>
+      		</FormControl>
+    	</Box>
+
+
+
+
 			</div>
 			<Modal
 				className={classes.modal}
@@ -147,6 +183,7 @@ const Home = () => {
 			</Modal>
 		</div>
 	);
+
 }
 
 export default Home;
