@@ -6,6 +6,7 @@ import base64
 import cv2
 import io
 from controller import yolo_predict 
+import os 
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -53,11 +54,11 @@ def predict():
         result = predict_image_file(file)
 
         return render_template('result.html', \
-                image=result['image'], \
-                total=result['count']['total'], \
-                green=result['count']['green'],
-                blue=result['count']['blue'],
-                boxes=result['boxes'])
+               image=result['image'], \
+               total=result['count']['total'], \
+               green=result['count']['green'],
+               blue=result['count']['blue'],
+               boxes=result['boxes'])
 
 
 @app.route('/predict_multiple', methods=['POST'])
@@ -71,6 +72,15 @@ def predict_multiple():
             prediction['filename'] = file.filename
             response['predictions'].append(prediction)
     return jsonify(response)
+
+
+@app.route('/get_models', methods=['GET'])
+@cross_origin()
+def get_models():
+    if request.method == 'GET':
+        models = os.listdir('./models')
+        return jsonify(models)
+    return jsonify([])
 
 
 if __name__ == '__main__':
