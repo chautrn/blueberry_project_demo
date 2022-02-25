@@ -5,8 +5,8 @@ from PIL import Image
 import base64
 import cv2
 import io
-from controller import yolo_predict 
-import os 
+from controller import yolo_predict
+import os
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -14,18 +14,18 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 def bytes_to_numpy(image_bytes):
-    image_array = np.fromstring(image_bytes, np.uint8)
+    image_array = np.frombuffer(image_bytes, np.uint8)
     image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # cv2.imwrite('test_input.png', image)
     return image
 
 
-def predict_image_file(file):
+def predict_image_file(file, model):
     image_bytes = file.read()
     image = bytes_to_numpy(image_bytes)
 
-    prediction = yolo_predict(image)
+    prediction = yolo_predict(image, model)
 
     prediction_image = prediction['image']
     prediction_image = Image.fromarray(prediction_image.astype('uint8'))
@@ -35,7 +35,7 @@ def predict_image_file(file):
     pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
     mime = 'image/jpeg'
 
-    uri = "data:%s;base64,%s"%(mime, pred_img_base64)
+    uri = "data:%s;base64,%s" % (mime, pred_img_base64)
 
     return {'image': uri,
             'count': prediction['count'],
@@ -66,9 +66,10 @@ def predict():
 def predict_multiple():
     if request.method == 'POST':
         files = request.files.getlist('file[]')
+        model = request.form['model']
         response = {'predictions': []}
         for file in files:
-            prediction = predict_image_file(file)
+            prediction = predict_image_file(file, model)
             prediction['filename'] = file.filename
             response['predictions'].append(prediction)
     return jsonify(response)
