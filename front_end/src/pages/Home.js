@@ -53,8 +53,12 @@ const Home = () => {
 	const [loading, setLoading] = useState(false);
 	const [camera, setCamera] = useState(false);
 	const [cameraImage, setCameraImage] = useState(null);
-	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
 
+	const [models, setModels] = useState([]);
+	const [model, setModel] = useState("best.pt");
+
+	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
+	
 	const classes = useStyles();
 
 	// called every time a file's `status` changes
@@ -64,6 +68,9 @@ const Home = () => {
 	const handleSubmit = (files, allFiles) => {
 		// console.log(files.map(f => f.meta));
 		const data = new FormData();
+		data.append("model", model);
+
+
 		for (const file of allFiles) {
 			data.append('file[]', file.file, file.name)
 		}
@@ -107,8 +114,25 @@ const Home = () => {
 
 	useEffect(() => {
 		setDropperFiles([]);
-	}, [])
+		fetchThis();
+	}, []);
 
+
+	function fetchThis() {
+		fetch('http://localhost:5000/get_models')
+			.then((response) => response.json())
+			.then((json) => { 
+				setModels(json);
+				console.log(json);
+			})
+	}
+
+	function menuItemCallBack(event) {
+		setModel(event.target.value);
+		console.log(event.target.value);
+
+	}
+	
 	if (prediction) {
 		return (
 			<Navigate
@@ -151,27 +175,27 @@ const Home = () => {
 					onClick={() => {loadSampleImages()}}
 				>Load Sample Images</Button>
 
-
-
+		{ models.length > 0 &&
 		<Box className={classes.dropDown} sx={{ width: 300 }}>
      		 <FormControl fullWidth >
         		<InputLabel id="demo-simple-select-label">Models</InputLabel>
         		<Select
           		labelId="demo-simple-select-label"
           		id="demo-simple-select"
-          		//value={age}
+          		value={model}
           		label="Models"
-          		//onChange={handleChange}
+          		onChange={menuItemCallBack}
+				
         		>
-          		<MenuItem value={10}>PlaceHolder1</MenuItem>
-          		<MenuItem value={20}>PlaceHolder2</MenuItem>
-          		<MenuItem value={30}>PlaceHolder3</MenuItem>
+          		{models.map((course, index) => {
+    			return (
+       			<MenuItem key={index} value={course}>{course}</MenuItem>
+     			 )
+ 					})}
         		</Select>
       		</FormControl>
     	</Box>
-
-
-
+		}
 
 			</div>
 			<Modal
