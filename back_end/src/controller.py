@@ -8,7 +8,7 @@ import pathlib
 print(torch)
 
 # Model
-model = torch.hub.load('chautrn/yolov5', 'custom', path=pathlib.Path(__file__).parent / 'models/best.pt')
+model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / 'models/best.pt')
 
 # Model settings
 model.conf = 0.6
