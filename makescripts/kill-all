@@ -1,0 +1,15 @@
+#!/bin/sh
+
+FPIDS=$(pgrep -a -U $USER | grep -v grep | grep "yolov5_API/front_end" | awk '{print $1}')
+for PID in $FPIDS
+do
+	echo killing front end $PID
+	kill $PID
+done
+
+BPIDS=$(pgrep -a -U $USER| grep -v grep | grep "python_env/bin/python" | grep "app.py" | awk '{print $1}')
+for PID in $BPIDS
+do
+	echo killing back end $PID
+	kill $PID
+done

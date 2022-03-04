@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo 'front end instances (node):'
+FPIDS=$(pgrep -a -U $USER | grep -v grep | grep "yolov5_API/front_end" | awk '{print $1}')
+for PID in $FPIDS
+do
+	echo $PID
+done
+echo "(if there is one instance that won't die, don't worry - I'm not sure why that is, but effectively the front end is killed)"
+
+echo ""
+echo 'back end instances (python):'
+BPIDS=$(pgrep -a -U $USER| grep -v grep | grep "python_env/bin/python" | grep "app.py" | awk '{print $1}')
+for PID in $BPIDS
+do
+	echo $PID
+done
