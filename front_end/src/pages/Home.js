@@ -7,6 +7,12 @@ import Loading from '../components/Loading';
 import Demo from '../components/Demo';
 import 'react-dropzone-uploader/dist/styles.css'
 import WebcamCapture from '../components/Webcam';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 
 
 const useStyles = makeStyles({
@@ -23,6 +29,7 @@ const useStyles = makeStyles({
 		}
 	},
 	buttonWrapper: {
+		
 	},
 	buttonSpaced: {
 		marginRight: '30px !important'
@@ -32,6 +39,12 @@ const useStyles = makeStyles({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+
+	dropDown: {
+		display: 'inline-block',
+		marginLeft: '30px'
+	}
+
 });
 
 const Home = () => {
@@ -40,8 +53,12 @@ const Home = () => {
 	const [loading, setLoading] = useState(false);
 	const [camera, setCamera] = useState(false);
 	const [cameraImage, setCameraImage] = useState(null);
-	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
 
+	const [models, setModels] = useState([]);
+	const [model, setModel] = useState("best.pt");
+
+	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
+	
 	const classes = useStyles();
 
 	// called every time a file's `status` changes
@@ -51,12 +68,15 @@ const Home = () => {
 	const handleSubmit = (files, allFiles) => {
 		// console.log(files.map(f => f.meta));
 		const data = new FormData();
+		data.append("model", model);
+
+
 		for (const file of allFiles) {
 			data.append('file[]', file.file, file.name)
 		}
 		allFiles.forEach(f => f.remove());
 		setLoading(true);
-		fetch('http://10.240.37.18:5000/predict_multiple', {
+		fetch('http://localhost:5000/predict_multiple', {
 			method: 'POST',
 			body: data,
 		})
@@ -94,8 +114,25 @@ const Home = () => {
 
 	useEffect(() => {
 		setDropperFiles([]);
-	}, [])
+		fetchThis();
+	}, []);
 
+
+	function fetchThis() {
+		fetch('http://localhost:5000/get_models')
+			.then((response) => response.json())
+			.then((json) => { 
+				setModels(json);
+				console.log(json);
+			})
+	}
+
+	function menuItemCallBack(event) {
+		setModel(event.target.value);
+		console.log(event.target.value);
+
+	}
+	
 	if (prediction) {
 		return (
 			<Navigate
@@ -137,6 +174,29 @@ const Home = () => {
 					variant='contained'
 					onClick={() => {loadSampleImages()}}
 				>Load Sample Images</Button>
+
+		{ models.length > 0 &&
+		<Box className={classes.dropDown} sx={{ width: 300 }}>
+     		 <FormControl fullWidth >
+        		<InputLabel id="demo-simple-select-label">Models</InputLabel>
+        		<Select
+          		labelId="demo-simple-select-label"
+          		id="demo-simple-select"
+          		value={model}
+          		label="Models"
+          		onChange={menuItemCallBack}
+				
+        		>
+          		{models.map((course, index) => {
+    			return (
+       			<MenuItem key={index} value={course}>{course}</MenuItem>
+     			 )
+ 					})}
+        		</Select>
+      		</FormControl>
+    	</Box>
+		}
+
 			</div>
 			<Modal
 				className={classes.modal}
@@ -147,6 +207,7 @@ const Home = () => {
 			</Modal>
 		</div>
 	);
+
 }
 
 export default Home;

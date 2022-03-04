@@ -1,7 +1,7 @@
 import unittest
 import cv2
 from cropper import get_tiles
-from combiner import combine_tiles, tile_dim 
+from combiner import combine_tiles, tile_dim
 from controller import get_predictions, imwriteRGB, yolo_predict
 from analysis import count_results
 
@@ -16,7 +16,7 @@ class TestCropper(unittest.TestCase):
         self.assertEqual(len(self.tiles), 24)
 
     def test_tile_dimensions(self):
-        all_640x640 = True 
+        all_640x640 = True
         for tilename in self.tiles.keys():
             tile = self.tiles[tilename]
             if tile.shape[0] != 640 or tile.shape[1] != 640:
@@ -24,7 +24,7 @@ class TestCropper(unittest.TestCase):
         self.assertTrue(all_640x640)
 
     def test_small_input(self):
-        small_image = self.image[0:50,0:50]
+        small_image = self.image[0:50, 0:50]
         small_tiles = get_tiles(small_image)
         self.assertEqual(len(small_tiles), 1)
 
@@ -84,6 +84,7 @@ class TestAnalysis(unittest.TestCase):
 
     def test_blueberry_count_total(self):
         self.assertEqual(self.prediction_info['total'], 840)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -14,6 +14,7 @@ def parse_args():
     args = parser.parse_args()
     return args 
 
+
 def closest_size(width, height, twidth, theight):
     new_width = math.ceil(width / twidth) * twidth
     new_height = math.ceil(height / theight) * theight
@@ -50,6 +51,7 @@ def get_tiles(image):
             image_in_tiles[new_path] = crop
 
     return image_in_tiles
+
 
 if __name__ == '__main__':
     # Args
