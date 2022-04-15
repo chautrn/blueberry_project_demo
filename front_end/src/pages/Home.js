@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, Button, Modal } from '@mui/material';
+import { IconButton, Button, Modal, Menu } from '@mui/material';
 import Dropzone from 'react-dropzone-uploader'
 import Loading from '../components/Loading';
 import Demo from '../components/Demo';
@@ -57,6 +57,8 @@ const Home = () => {
 	const [models, setModels] = useState([]);
 	const [model, setModel] = useState("best.pt");
 
+	const [detectionMethod, setDetectionMethod] = useState("bush");
+
 	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
 	
 	const classes = useStyles();
@@ -69,6 +71,7 @@ const Home = () => {
 		// console.log(files.map(f => f.meta));
 		const data = new FormData();
 		data.append("model", model);
+		data.append("detectionMethod", detectionMethod)
 
 
 		for (const file of allFiles) {
@@ -129,7 +132,10 @@ const Home = () => {
 
 	function menuItemCallBack(event) {
 		setModel(event.target.value);
+		//setDetectionMethod(event.target.type);
+		setDetectionMethod("bush")
 		console.log(event.target.value);
+		console.log(event.target);
 
 	}
 	
@@ -165,37 +171,39 @@ const Home = () => {
 				/>
 			</div>
 			<div className={classes.buttonWrapper}>
-				<Button 
+				{/*<Button 
 					className={classes.buttonSpaced}
 					variant='contained'
 					onClick={() => {setCamera(true)}}
-				>Camera</Button>
+					>Camera</Button>*/}
 				<Button 
 					variant='contained'
 					onClick={() => {loadSampleImages()}}
 				>Load Sample Images</Button>
-
-		{ models.length > 0 &&
+			
+		
 		<Box className={classes.dropDown} sx={{ width: 300 }}>
-     		 <FormControl fullWidth >
-        		<InputLabel id="demo-simple-select-label">Models</InputLabel>
-        		<Select
-          		labelId="demo-simple-select-label"
-          		id="demo-simple-select"
-          		value={model}
-          		label="Models"
-          		onChange={menuItemCallBack}
-				
-        		>
-          		{models.map((course, index) => {
-    			return (
-       			<MenuItem key={index} value={course}>{course}</MenuItem>
-     			 )
- 					})}
-        		</Select>
-      		</FormControl>
-    	</Box>
-		}
+			<FormControl fullWidth >
+				<InputLabel id="demo-simple-select-label">Models</InputLabel>
+				<Select
+				labelId="demo-simple-select-label"
+				id="demo-simple-select"
+				value={model}
+				label="Models"
+				onChange={menuItemCallBack}
+				>
+				<MenuItem value="best.pt" type="berries">berries</MenuItem>
+          		<MenuItem value="bush.pt" type="bus">bush</MenuItem>
+          		<MenuItem value="30_cocosplitv3_30s" type="berries">30_cocosplitv3_30s</MenuItem>
+				{models.map((course, index) => {
+				return (
+				<MenuItem key={index} value={course}>{course} </MenuItem>
+				)
+					})}
+				</Select>
+			</FormControl>
+		</Box>
+		
 
 			</div>
 			<Modal

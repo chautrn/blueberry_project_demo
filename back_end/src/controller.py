@@ -1,7 +1,7 @@
 import torch
 import cv2
 from cropper import get_tiles
-from analysis import count_results, get_results_as_dataframe
+from analysis import count_results, count_results_no_crop, count_bush_results, get_results_as_dataframe
 from combiner import combine_tiles
 import pathlib
 import warnings
@@ -40,6 +40,36 @@ def get_predictions(image, model_str):
         results[tilename] = result
     return results
 
+def get_predictions_no_crop(image, model_str):
+    results = {}
+
+    if model_str not in models:
+        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
+        apply_model_settings(new_model)
+        models[model_str] = new_model
+
+    print(f'using {model_str}')
+
+    #for tilename in tiles.keys():
+    #    tile = tiles[tilename]
+    #    result = models[model_str](tile)
+    #    results[tilename] = result
+
+
+    result = models[model_str](image)
+    results['tile_x_0_y_0.png'] = result
+
+    return results
+
+def yolo_predict_no_crop2(image, model='best.pt'):
+    results = get_predictions_no_crop(image, model)
+    combined_image = combine_tiles(results)
+
+    count = count_bush_results(results)
+    all_boxes = get_results_as_dataframe(results)
+    box_data = all_boxes.to_dict(orient='index')
+    return {'image': combined_image, 'count': count, 'boxes': box_data}
+    
 
 def yolo_predict(image, model='best.pt'):
     results = get_predictions(image, model)
@@ -48,6 +78,22 @@ def yolo_predict(image, model='best.pt'):
     all_boxes = get_results_as_dataframe(results)
     box_data = all_boxes.to_dict(orient='index')
     return {'image': combined_image, 'count': count, 'boxes': box_data}
+
+
+def yolo_predict_no_crop(image, model_str='best.pt'):
+    if model_str not in models:
+        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
+        apply_model_settings(new_model)
+        models[model_str] = new_model
+    print(f'using {model_str}')
+    result = models[model_str](image)
+    result_img = result
+    count = count_results_no_crop(result)
+    all_boxes = get_results_as_dataframe(result)
+    box_data = all_boxes.to_dict(orient='index')
+    return {'image': result_img, 'count': count, 'boxes': box_data}
+
+
 
 
 if __name__ == '__main__':
