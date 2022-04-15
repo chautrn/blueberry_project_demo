@@ -25,7 +25,7 @@ def predict_image_file(file, model, detectionMethod):
     image_bytes = file.read()
     image = bytes_to_numpy(image_bytes)
 
-    print(detectionMethod)
+    print("using weights file: " + model)
     if detectionMethod == "berries":
         print("using yolo_predict")
         prediction = yolo_predict(image, model)

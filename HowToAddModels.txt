@@ -1,0 +1,17 @@
+1) upload your new weight file into .\back_end\src\models\
+	**make sure its a .pt file
+
+2) linking weight to front end and updating the dropdown...
+  a) open Home.js (.\front_end\src\pages)
+  b) go to line ~200
+  c) add a new MenuItem under the current MenuItems... follow this structure
+
+	<MenuItem value={"NAMEOFYOURWEIGHTFILE"} 
+		onClick={() => setDetectionMethod("berries")}
+		>NAME_YOU_WANT_TO_DISPLAY_IN_THE_DROPDOWN</MenuItem>
+
+	** this structure calls the berry detection model by default, which splits 
+	   image before passing into model. If you do not want to split...change:
+		onClick={() => setDetectionMethod("berries")} to
+		onClick={() => setDetectionMethod("bushes")}
+  d) save

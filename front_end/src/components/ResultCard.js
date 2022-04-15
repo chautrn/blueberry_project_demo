@@ -42,7 +42,14 @@ const ResultCard = ( props ) => {
 			</CardMedia>
 			<CardContent className={classes.content}>
 				<Typography gutterBottom variant='h5' component='div' style={{color: 'white'}}>
-					{`${trimWithEllipses(props.filename, 20)}, Total: ${props.count.total}, Blues: ${props.count.blue}, Greens: ${props.count.green}`}
+					{props.count.blue == null 
+						// if props.count.blue == null, it means we did not count for blue berries, most likely only counted for bushes
+						// thus, resultcard only displays total bushes
+						? `${trimWithEllipses(props.filename, 20)}, Total: ${props.count.total}`
+						// if prop.count.blue exists, means that bluberries were detected, thus displays total, blues, and greens
+						: `${trimWithEllipses(props.filename, 20)}, Total: ${props.count.total}, Blues: ${props.count.blue}, Greens: ${props.count.green}`
+					}
+				
 				</Typography>
 			</CardContent>
 		</Card>

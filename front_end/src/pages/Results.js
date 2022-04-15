@@ -114,7 +114,18 @@ const Results = () => {
 						>
 							Download Annotations
 						</Button>
-						<Button variant='contained' onClick={handleDownloadImages}>Download Images</Button>
+						<Button 
+							variant='contained'
+							style={{marginRight: '30px'}}
+							onClick={handleDownloadImages}
+							>
+							Download Images
+							</Button>
+						<Button 
+							variant='contained'
+							>
+							Save For Reannotation
+							</Button>
 					</div>
 				</div>
 				<Modal

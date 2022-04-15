@@ -1,0 +1,6 @@
+This is the basic control-flow from front-end to back-end. 
+
+	home.js calls predict_multiple in app.py (backend)
+	predict_multiple -> predict_image_file (app.py) -> 
+	yolo_predict(controller.py) -> get_predictions(controller.py) -> 
+	get_tiles(cropper.py)

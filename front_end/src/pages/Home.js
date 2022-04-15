@@ -132,10 +132,9 @@ const Home = () => {
 
 	function menuItemCallBack(event) {
 		setModel(event.target.value);
-		//setDetectionMethod(event.target.type);
-		setDetectionMethod("bush")
+
+		console.log(detectionMethod);
 		console.log(event.target.value);
-		console.log(event.target);
 
 	}
 	
@@ -192,9 +191,20 @@ const Home = () => {
 				label="Models"
 				onChange={menuItemCallBack}
 				>
-				<MenuItem value="best.pt" type="berries">berries</MenuItem>
-          		<MenuItem value="bush.pt" type="bus">bush</MenuItem>
-          		<MenuItem value="30_cocosplitv3_30s" type="berries">30_cocosplitv3_30s</MenuItem>
+				<MenuItem value={"best.pt"} 
+						//data-detection={"berries"}
+						// ideally the instructions in onClick should be in onChange={menuItemCallBack}, reminder to go back and fix
+						// when fixing, look into using custom attributes
+						onClick={() => setDetectionMethod("berries")}
+						>berries</MenuItem>
+          		<MenuItem value={"bush.pt"} 
+				  		//data-detection={"bush"}
+						onClick={() => setDetectionMethod("bush")}
+				  		>bush</MenuItem>
+          		<MenuItem value={"30_cocosplitv3_30s"} 
+				  		//data-detection={"berries"}
+						onClick={() => setDetectionMethod("berries")}
+						>30_cocosplitv3_30s</MenuItem>
 				{models.map((course, index) => {
 				return (
 				<MenuItem key={index} value={course}>{course} </MenuItem>
