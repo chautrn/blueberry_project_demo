@@ -86,6 +86,11 @@ const Results = () => {
 		});
 	}
 
+	const handleSaveForReannotation = () => {
+		var FileSaver = require('file-saver');
+		FileSaver.saveAs("https://httpbin.org/image", "./image.jpg");
+	}
+
 	if (state.res) {
 		return (
 			<>
@@ -123,6 +128,7 @@ const Results = () => {
 							</Button>
 						<Button 
 							variant='contained'
+							onClick={handleSaveForReannotation}
 							>
 							Save For Reannotation
 							</Button>

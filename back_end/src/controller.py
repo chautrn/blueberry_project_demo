@@ -25,75 +25,45 @@ def imwriteRGB(path, image):
     cv2.imwrite(path, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
 
 
-def get_predictions(image, model_str):
-    tiles = get_tiles(image)
-    results = {}
-    if model_str not in models:
-        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
-        apply_model_settings(new_model)
-        models[model_str] = new_model
-    print(f'using {model_str}')
-    for tilename in tiles.keys():
-        tile = tiles[tilename]
-        print(tile.shape)
-        result = models[model_str](tile)
-        results[tilename] = result
-    return results
-
-def get_predictions_no_crop(image, model_str):
-    results = {}
-
-    if model_str not in models:
-        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
-        apply_model_settings(new_model)
-        models[model_str] = new_model
-
-    print(f'using {model_str}')
-
-    #for tilename in tiles.keys():
-    #    tile = tiles[tilename]
-    #    result = models[model_str](tile)
-    #    results[tilename] = result
-
-
-    result = models[model_str](image)
-    results['tile_x_0_y_0.png'] = result
-
-    return results
-
-def yolo_predict_no_crop2(image, model='best.pt'):
-    results = get_predictions_no_crop(image, model)
+def yolo_predict(image, detectionMethod, model='best.pt'):
+    results = get_predictions(image, model, detectionMethod)
     combined_image = combine_tiles(results)
 
-    count = count_bush_results(results)
+    if detectionMethod == "bush":
+        count = count_bush_results(results)
+    else:
+        count = count_results(results)
+
     all_boxes = get_results_as_dataframe(results)
     box_data = all_boxes.to_dict(orient='index')
     return {'image': combined_image, 'count': count, 'boxes': box_data}
+
+
+def get_predictions(image, model_str, detectionMethod):
+    results = {}
+
+    if model_str not in models:
+        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
+        apply_model_settings(new_model)
+        models[model_str] = new_model
+
+    print(f'using {detectionMethod} detection method')
+    print(f'using {model_str}')
+
+    if detectionMethod == "bush":
+        # passes entire image as 1 big tile into model without splitting it
+        result = models[model_str](image)
+        results['tile_x_0_y_0.png'] = result
+    else: 
+        # splits image into smaller tiles and passes each tile into model.
+        tiles = get_tiles(image)
+        for tilename in tiles.keys():
+            tile = tiles[tilename]
+            print(tile.shape)
+            result = models[model_str](tile)
+            results[tilename] = result
     
-
-def yolo_predict(image, model='best.pt'):
-    results = get_predictions(image, model)
-    combined_image = combine_tiles(results)
-    count = count_results(results)
-    all_boxes = get_results_as_dataframe(results)
-    box_data = all_boxes.to_dict(orient='index')
-    return {'image': combined_image, 'count': count, 'boxes': box_data}
-
-
-def yolo_predict_no_crop(image, model_str='best.pt'):
-    if model_str not in models:
-        new_model = torch.hub.load('chautrn/yolov5:chau', 'custom', path=pathlib.Path(__file__).parent / f'models/{model_str}')
-        apply_model_settings(new_model)
-        models[model_str] = new_model
-    print(f'using {model_str}')
-    result = models[model_str](image)
-    result_img = result
-    count = count_results_no_crop(result)
-    all_boxes = get_results_as_dataframe(result)
-    box_data = all_boxes.to_dict(orient='index')
-    return {'image': result_img, 'count': count, 'boxes': box_data}
-
-
+    return results
 
 
 if __name__ == '__main__':

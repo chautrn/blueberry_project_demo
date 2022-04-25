@@ -56,8 +56,8 @@ const Home = () => {
 
 	const [models, setModels] = useState([]);
 	const [model, setModel] = useState("best.pt");
-
-	const [detectionMethod, setDetectionMethod] = useState("bush");
+ 
+	const [detectionMethod, setDetectionMethod] = useState("berry");
 
 	const sampleImages = ['IMG_0169.jpeg', 'IMG_0170.jpeg', 'IMG_0171.jpeg'];
 	
@@ -180,7 +180,7 @@ const Home = () => {
 					onClick={() => {loadSampleImages()}}
 				>Load Sample Images</Button>
 			
-		
+		{/** DROPDOWN MENU. SELECTS WHAT WEIGHT FILE TO USE IN MODEL*/}
 		<Box className={classes.dropDown} sx={{ width: 300 }}>
 			<FormControl fullWidth >
 				<InputLabel id="demo-simple-select-label">Models</InputLabel>
@@ -192,18 +192,15 @@ const Home = () => {
 				onChange={menuItemCallBack}
 				>
 				<MenuItem value={"best.pt"} 
-						//data-detection={"berries"}
 						// ideally the instructions in onClick should be in onChange={menuItemCallBack}, reminder to go back and fix
 						// when fixing, look into using custom attributes
-						onClick={() => setDetectionMethod("berries")}
+						onClick={() => setDetectionMethod("berry")}
 						>berries</MenuItem>
           		<MenuItem value={"bush.pt"} 
-				  		//data-detection={"bush"}
 						onClick={() => setDetectionMethod("bush")}
 				  		>bush</MenuItem>
           		<MenuItem value={"30_cocosplitv3_30s"} 
-				  		//data-detection={"berries"}
-						onClick={() => setDetectionMethod("berries")}
+						onClick={() => setDetectionMethod("berry")}
 						>30_cocosplitv3_30s</MenuItem>
 				{models.map((course, index) => {
 				return (

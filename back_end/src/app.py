@@ -5,7 +5,7 @@ from PIL import Image
 import base64
 import cv2
 import io
-from controller import yolo_predict, yolo_predict_no_crop, yolo_predict_no_crop2
+from controller import yolo_predict#, yolo_predict_no_crop, yolo_predict_no_crop2
 import os
 
 app = Flask(__name__)
@@ -25,14 +25,7 @@ def predict_image_file(file, model, detectionMethod):
     image_bytes = file.read()
     image = bytes_to_numpy(image_bytes)
 
-    print("using weights file: " + model)
-    if detectionMethod == "berries":
-        print("using yolo_predict")
-        prediction = yolo_predict(image, model)
-    else:
-        print("using yolo_predict_no_crop")
-        prediction = yolo_predict_no_crop2(image, model)
-
+    prediction = yolo_predict(image, detectionMethod, model)
 
     prediction_image = prediction['image']
     prediction_image = Image.fromarray(prediction_image.astype('uint8'))
