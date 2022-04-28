@@ -5,7 +5,7 @@ from PIL import Image
 import base64
 import cv2
 import io
-from controller import yolo_predict
+from controller import yolo_predict#, yolo_predict_no_crop, yolo_predict_no_crop2
 import os
 
 app = Flask(__name__)
@@ -21,16 +21,17 @@ def bytes_to_numpy(image_bytes):
     return image
 
 
-def predict_image_file(file, model):
+def predict_image_file(file, model, detectionMethod):
     image_bytes = file.read()
     image = bytes_to_numpy(image_bytes)
 
-    prediction = yolo_predict(image, model)
+    prediction = yolo_predict(image, detectionMethod, model)
 
     prediction_image = prediction['image']
     prediction_image = Image.fromarray(prediction_image.astype('uint8'))
     raw_bytes = io.BytesIO()
     prediction_image.save(raw_bytes, 'JPEG')
+    
     raw_bytes.seek(0)
     pred_img_base64 = base64.b64encode(raw_bytes.getvalue()).decode('ascii')
     mime = 'image/jpeg'
@@ -67,9 +68,10 @@ def predict_multiple():
     if request.method == 'POST':
         files = request.files.getlist('file[]')
         model = request.form['model']
+        detectionMethod = request.form['detectionMethod']
         response = {'predictions': []}
         for file in files:
-            prediction = predict_image_file(file, model)
+            prediction = predict_image_file(file, model, detectionMethod)
             prediction['filename'] = file.filename
             response['predictions'].append(prediction)
     return jsonify(response)
