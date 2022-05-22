@@ -86,6 +86,11 @@ const Results = () => {
 		});
 	}
 
+	const handleSaveForReannotation = () => {
+		var FileSaver = require('file-saver');
+		FileSaver.saveAs("https://httpbin.org/image", "./image.jpg");
+	}
+
 	if (state.res) {
 		return (
 			<>
@@ -114,7 +119,19 @@ const Results = () => {
 						>
 							Download Annotations
 						</Button>
-						<Button variant='contained' onClick={handleDownloadImages}>Download Images</Button>
+						<Button 
+							variant='contained'
+							style={{marginRight: '30px'}}
+							onClick={handleDownloadImages}
+							>
+							Download Images
+							</Button>
+						<Button 
+							variant='contained'
+							onClick={handleSaveForReannotation}
+							>
+							Save For Reannotation
+							</Button>
 					</div>
 				</div>
 				<Modal
