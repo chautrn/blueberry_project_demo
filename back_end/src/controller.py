@@ -45,10 +45,10 @@ def yolo_predict(image, model='best.pt'):
     results = get_predictions(image, model)
     combined_image = combine_tiles(results)
     count = count_results(results)
-    all_boxes = get_results_as_dataframe(results)
+    all_boxes = get_results_as_dataframe(results, image, combined_image)
     box_data = all_boxes.to_dict(orient='index')
     return {'image': combined_image, 'count': count, 'boxes': box_data}
 
 
 if __name__ == '__main__':
-    traced_model = torch.jit.trace(model, torch.randn(1, 3, 640, 640))
+    traced_model = torch.jit.trace('best.pt', torch.randn(1, 3, 640, 640))
