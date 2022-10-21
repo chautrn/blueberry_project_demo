@@ -64,10 +64,10 @@ def predict():
 @app.route('/predict_multiple', methods=['POST'])
 @cross_origin()
 def predict_multiple():
+    response = {'predictions': []}
     if request.method == 'POST':
         files = request.files.getlist('file[]')
         model = request.form['model']
-        response = {'predictions': []}
         for file in files:
             prediction = predict_image_file(file, model)
             prediction['filename'] = file.filename
