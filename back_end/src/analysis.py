@@ -1,4 +1,11 @@
+import numpy as np
 import pandas as pd
+import re
+
+
+def coords_from_tilename(tilename):
+    coords = re.findall('\d+', tilename)
+    return (int(coords[0]), int(coords[1]))
 
 
 def count_results(results):
@@ -23,8 +30,19 @@ def count_results(results):
 def get_results_as_dataframe(results):
     frames = []
     for tilename in results.keys():
+        (x, y) = coords_from_tilename(tilename)
+        offsetX = np.float64(x * 640)
+        offsetY = np.float64(y * 640)
+        print(offsetX)
+        print(offsetY)
         result = results[tilename]
         frame = result.pandas().xyxy[0]
+        frame['xmin'] = frame['xmin'] + offsetX
+        frame['xmax'] = frame['xmax'] + offsetX
+        frame['ymin'] = frame['ymin'] + offsetY
+        frame['ymax'] = frame['ymax'] + offsetY
+        print(frame)
         frames.append(frame)
 
-    return pd.concat(frames, ignore_index=True)
+    df = pd.concat(frames, ignore_index=True)
+    return df
