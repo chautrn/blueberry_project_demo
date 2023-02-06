@@ -17,8 +17,8 @@ def count_results(results):
     for tilename in results.keys():
         result = results[tilename]
         total = result.pandas().xyxy[0]
-        blue = total[total['class'] == 0]
-        green = total[total['class'] == 1]
+        blue = total[total['class'] == 1]
+        green = total[total['class'] == 2]
 
         counts['total'] += len(total)
         counts['blue'] += len(blue)

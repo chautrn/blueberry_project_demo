@@ -9,7 +9,10 @@ import warnings
 warnings.filterwarnings(action='ignore', category=torch.jit.TracerWarning)
 
 def apply_model_settings(model_obj):
-    model_obj.conf = 0.6
+    model_obj.iou = 0.45
+    model_obj.conf = 0.5
+    model_obj.agnostic = True
+    model_obj.multi_label = False
     model_obj.hide_labels = True
     model_obj.hide_conf = True
 
